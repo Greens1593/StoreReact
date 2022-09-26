@@ -52,9 +52,8 @@ const Device = sequelize.define('device', {
         allowNull: false,
     },
     rating: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: 0
     },
     img: {
         type: DataTypes.STRING,
