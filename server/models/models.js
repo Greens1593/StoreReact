@@ -53,7 +53,7 @@ const Device = sequelize.define('device', {
     },
     rating: {
         type: DataTypes.INTEGER,
-        defaultValue: 0
+        defaultValue: 0,
     },
     img: {
         type: DataTypes.STRING,
@@ -74,7 +74,7 @@ const Type = sequelize.define('type', {
     },
 });
 
-const Brand = sequelize.define('brend', {
+const Brand = sequelize.define('brand', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
