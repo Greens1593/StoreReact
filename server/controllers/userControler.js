@@ -30,8 +30,18 @@ class UserControler {
         return res.json({token})
     }
 
-    async login(req, res){
-        
+    async login(req, res, next){
+        const {email, password} = req.body
+        const user = await User.findOne({where: {email}})
+        if(!user){
+            return next(ApiError.internal('User did not registrate'))
+        }
+        let comparePassword = bcrypt.compareSync(password, user.password)
+        if(!comparePassword){
+            return next(ApiError.internal('Password is not correct'))
+        }
+        const token = generateJwt(user.id, user.email, user.role)
+        res.json({token})
     }
 
     async check(req, res, next){
