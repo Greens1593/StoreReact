@@ -21,19 +21,22 @@ class DeviceControler {
     }
 
     async getAll(req, res){
-        const {brandId, typeId} = req.query
+        let {brandId, typeId, limit, page} = req.query
+        page = page || 1
+        limit = limit || 9
+        let offset = page * limit - limit
         let devises;
         if(!brandId && !typeId){
-            devises = await Device.findAll()
+            devises = await Device.findAndCountAll({limit, offset})
         }
         if(brandId && !typeId){
-            devises = await Device.findAll({where:{brandId}})
+            devises = await Device.findAndCountAll({where:{brandId}, limit, offset})
         }
         if(!brandId && typeId){
-            devises = await Device.findAll({where:{typeId}})
+            devises = await Device.findAndCountAll({where:{typeId}, limit, offset})
         }
         if(brandId && typeId){
-            devises = await Device.findAll({where:{brandId, typeId}})
+            devises = await Device.findAndCountAll({where:{brandId, typeId}, limit, offset})
         }
         return res.json(devises)
     }
