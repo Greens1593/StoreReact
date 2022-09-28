@@ -5,7 +5,7 @@ const {User, Basket} = require('../models/models')
 
 const generateJwt = (id, email, role) => {
     return jwt.sign({id: id, email, role}, 
-        process.env.SEKRET_KEY,
+        process.env.SECRET_KEY,
         {expiresIn: '24h'})
 }
 
@@ -45,12 +45,8 @@ class UserControler {
     }
 
     async check(req, res, next){
-        const {id} = req.query
-        
-        if(!id){
-            return next(ApiError.badReqest('Id is not defined'))
-        }
-        res.json(id)
+        const token = generateJwt(req.user.id, req.user.email, req.user.role)
+        return res.json({token})
     }
 }
 
