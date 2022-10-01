@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { ListGroup } from "react-bootstrap";
 import { Context } from "..";
 
-const TypeBar = observer (() => {
+const TypeBar = observer(() => {
     const {device} = useContext(Context)
     return (
     <ListGroup as="ul">
