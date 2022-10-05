@@ -20,7 +20,7 @@ const Auth = observer(() => {
         let data
         if(isLogin){
             data = await login(email, password)
-        } else {
+        } else if (!isLogin) {
             data = await registration(email, password)
         }
         
@@ -28,7 +28,7 @@ const Auth = observer(() => {
         user.setIsAuth(true)
         history.push(SHOP_ROUTE)
        } catch(e){
-        alert(e.message)
+        alert(e.response.data.message)
         }
     }
 
