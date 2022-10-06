@@ -1,7 +1,7 @@
 import { $authHost, $host } from "./index";
 
 export async function createItem(api, item){
-    const {data} = await $authHost.post(api, {item})
+    const {data} = await $authHost.post(api, item)
     return data
 }
 
