@@ -10,6 +10,13 @@ export async function fetchItems(api){
     return data
 }
 
+export async function fetchDevices(api, typeId, brandId, page, limit=5){
+    const {data} = await $host.get(api, {params: {
+        typeId, brandId, page, limit
+        }})
+    return data
+}
+
 export async function fetchOneItem(api, id){
     const {data} = await $host.get(api + id)
     return data
