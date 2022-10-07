@@ -5,10 +5,12 @@ import { createItem } from "../../http/deviceAPI";
 const CreateBrand = ({show, onHide}) => {
     const [value, setValue] = useState('')
     const addBrand = () => {
-        createItem('api/brand', {name: value}).then(() => {
+        createItem('api/brand', {name: value})
+        .then(() => {
             setValue('')
             onHide()
-        }).catch(e => console.log(e))
+        })
+        .catch(e => console.log(e))
         .finally(console.log('Finaly'))
     }
 
