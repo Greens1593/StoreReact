@@ -5,7 +5,7 @@ const checkRoleMiddleware = require('../middleware/checkRoleMiddleware');
 const router = new Router();
 
 router.post('/', checkRoleMiddleware('ADMIN'), brandController.create)
-router.delete('/', checkRoleMiddleware('ADMIN'), brandController.delete)
+router.delete('/:id', checkRoleMiddleware('ADMIN'), brandController.delete)
 router.get('/', brandController.getAll)
 
 
