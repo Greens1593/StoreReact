@@ -11,11 +11,18 @@ const App = observer( () => {
   const {user} = useContext(Context)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-      check().then(data => {
+      check()
+      .then(data => {
           user.setUser(true)
           user.setIsAuth(true)
-      }).finally(()=> setLoading(false))
-    }, [])
+      })
+      .catch(e => {
+        user.setUser(false)
+        user.setIsAuth(false)
+        console.log(e.message)
+      })
+      .finally(()=> setLoading(false))
+    }, [user])
 
     if(loading) {
       return <Spinner animation={'grow'}/>

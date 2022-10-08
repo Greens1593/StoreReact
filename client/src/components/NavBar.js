@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import {Button, Container} from 'react-bootstrap';
 import { NavLink, useHistory } from "react-router-dom";
-import { ADMIN_ROUTE, LOGIN_ROUTE, SHOP_ROUTE } from "../utils/consts";
+import { ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { observer } from "mobx-react-lite";
 
 const NavBar = observer ( () => {
@@ -14,6 +14,7 @@ const NavBar = observer ( () => {
     const logOut = () => {
       user.setUser({})
       user.setIsAuth(false)
+      localStorage.setItem('token', '')
     }
 
     return (
@@ -40,6 +41,12 @@ const NavBar = observer ( () => {
                   variant={'outline-light'} 
                   onClick={()=>history.push(LOGIN_ROUTE)}>
                     Авторизация
+                </Button>
+                <Button
+                  style={{marginLeft:'10px'}}
+                  variant={'outline-light'} 
+                  onClick={()=>history.push(REGISTRATION_ROUTE)}>
+                    Регистрация
                 </Button>
           </Nav>
           }

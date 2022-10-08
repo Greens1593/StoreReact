@@ -17,6 +17,7 @@ const Shop = observer(() => {
             device.setDevices(data.rows)
             device.setTotalCount(data.count)
         })
+        .catch(e => console.log(e))
     }, [device])
 
     useEffect(() => {

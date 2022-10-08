@@ -32,6 +32,14 @@ const CreateDevice = observer(({show, onHide}) => {
         setInfo(info.map(i => i.number === number ? {...i, [key]: value} : i))
     }
 
+    const closeWindow = () => {
+        device.setSelectedType({})
+        device.setSelectedBrand({})
+        setName('')
+        setPrice(0)
+        onHide()
+    }
+
     const addDevice = () => {
         const formData = new FormData()
         formData.append('name', name)
@@ -144,7 +152,7 @@ const CreateDevice = observer(({show, onHide}) => {
             </Form>
         </Modal.Body>
         <Modal.Footer>
-            <Button variant='outline-danger' onClick={onHide}>Закрыть</Button>
+            <Button variant='outline-danger' onClick={closeWindow}>Закрыть</Button>
             <Button variant='outline-success' onClick={addDevice}>Добавить новое устройство</Button>
         </Modal.Footer>
     </Modal>        
