@@ -10,7 +10,7 @@ const CreateDevice = observer(({show, onHide}) => {
     useEffect(()=> {
         fetchItems('api/type').then(data => device.setTypes(data))
         fetchItems('api/brand').then(data => device.setBrands(data))
-    }, [])
+    }, [device])
 
     const [name, setName] = useState('')
     const [price, setPrice] = useState(0)
