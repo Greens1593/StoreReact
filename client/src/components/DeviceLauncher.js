@@ -1,14 +1,21 @@
-import React from "react";
-import { Image, Row } from "react-bootstrap";
+import React, { useContext } from "react";
+import { Image} from "react-bootstrap";
+import { Context } from "..";
 
-const DeviceLauncher = ({device}) => {
-    
+const DeviceLauncher = ({foundDevice}) => {
+    const {device} = useContext(Context)
+    const brands = device.brands
+    const types = device.types
+    const foundBrand = brands.filter(brand => brand.id === foundDevice.brandId)
+    const foundType = types.filter(type => type.id === foundDevice.typeId)
+ 
     return (
-        <Row className="d-flex flex-nowrap align-items-baseline" style={{width:498, cursor:'pointer'}} border={'light'}>
-                <Image width={15} height={15} src={process.env.REACT_APP_API_URL + '/' + device.img} alt={device.name}/>
-                <div>{device.brand.map(brand => brand.name)}</div> 
-                <div>{device.name}</div>
-        </Row>
+        <div className="d-flex flex-nowrap justify-content-between" style={{width:480, marginLeft:3}} border={'light'}>
+                <Image width={40} height={40} src={process.env.REACT_APP_API_URL + '/' + foundDevice.img} alt={foundDevice.name}/> 
+                <div>{foundType.map(type => type.name)}</div>
+                <div>{foundBrand.map(brand => brand.name)}</div>
+                <div>{foundDevice.name}</div>
+        </div>
     )
 }
 

@@ -1,28 +1,26 @@
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Modal, Row, InputGroup } from "react-bootstrap";
-import { Context } from "../..";
 import { fetchItems } from "../../http/deviceAPI";
 import DeviceLauncher from "../DeviceLauncher";
 
 const DeleteDevice = observer(({show, onHide}) => {
-    const {device} = useContext(Context)
+    
+    const [name, setName] = useState('')
+    const [devices, setDevices] = useState([])
+    const [foundedDevice, setFoundedDevice] = useState([])
     
     useEffect(()=> {
         fetchItems('api/device').then(data => {
-            device.setDevices(data.rows)})
-    }, [device])
+            setDevices(data.rows)})
+    }, [])
 
-    const [name, setName] = useState('')
-
-    const foundedDevice = device.devices.filter(device => device.name === name)
-
-    const showLaunch = (foundedDevice) => {
-        if(foundedDevice){
-            return <DeviceLauncher device={foundedDevice}/>
-        }
+    const foundDevice = ()=>{
+        const founded = devices.filter(device => (!(-1 === device.name.toLowerCase().indexOf(name.toLocaleLowerCase()))))
+        setFoundedDevice(founded)
     }
 
+    
 
     const closeWindow = () => {
         setName('')
@@ -49,11 +47,18 @@ const DeleteDevice = observer(({show, onHide}) => {
                     aria-label="Введите название устройства"
                     aria-describedby="basic-addon1"
                     value={name}
-                    onChange={e => setName(e.target.value)}
+                    onChange={e => {
+                        setName(e.target.value)
+                        foundDevice()
+                    }}
                     />
                 </InputGroup>
                     <Row className='d-flex'>
-                        
+                        {foundedDevice.length === 0 ? 
+                            <Row className="d-flex justify-content-center">Устройств с таким названием не найдено</Row> :
+                                foundedDevice.map(device => 
+                                    <DeviceLauncher key={device.id} foundDevice={device}/>
+                                )}
                     </Row>
                 <hr/>
         </Modal.Body>
