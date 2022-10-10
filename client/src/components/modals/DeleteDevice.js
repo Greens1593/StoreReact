@@ -5,15 +5,21 @@ import { fetchItems } from "../../http/deviceAPI";
 import DeviceLauncher from "../DeviceLauncher";
 
 const DeleteDevice = observer(({show, onHide}) => {
-    
+
     const [name, setName] = useState('')
     const [devices, setDevices] = useState([])
     const [foundedDevice, setFoundedDevice] = useState([])
-    
+    const [deviceForDelete, setDeviceForDelete] = useState([])
+
+    const chooseDeviceForDelete = (devices) => {
+        setDeviceForDelete(devices)   
+    }    
+
     useEffect(()=> {
         fetchItems('api/device').then(data => {
             setDevices(data.rows)})
     }, [])
+
 
     const foundDevice = ()=>{
         const founded = devices.filter(device => (!(-1 === device.name.toLowerCase().indexOf(name.toLocaleLowerCase()))))
@@ -24,6 +30,11 @@ const DeleteDevice = observer(({show, onHide}) => {
 
     const closeWindow = () => {
         setName('')
+        onHide()
+    }
+
+    const deleteDevice = () => {
+        console.log(deviceForDelete)
         onHide()
     }
 
@@ -57,14 +68,23 @@ const DeleteDevice = observer(({show, onHide}) => {
                         {foundedDevice.length === 0 ? 
                             <Row className="d-flex justify-content-center">Устройств с таким названием не найдено</Row> :
                                 foundedDevice.map(device => 
-                                    <DeviceLauncher key={device.id} foundDevice={device}/>
+                                    <DeviceLauncher 
+                                    key={device.id} 
+                                    foundDevice={device}
+                                    onClick={chooseDeviceForDelete}
+                                    />
                                 )}
                     </Row>
-                <hr/>
         </Modal.Body>
         <Modal.Footer>
-            <Button variant='outline-danger' onClick={closeWindow}>Закрыть</Button>
-            <Button variant='outline-success' onClick={onHide}>Удалить устройство</Button>
+            <Button variant='outline-danger' onClick={closeWindow}>Закрыть</Button> 
+            <Button 
+                variant='outline-success' 
+                onClick={deleteDevice}
+                disabled={deviceForDelete ? true : false}
+                >
+                    Удалить устройство
+            </Button>  
         </Modal.Footer>
     </Modal>        
     )
