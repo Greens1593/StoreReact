@@ -4,69 +4,71 @@ import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import { Context } from "../..";
 import { deleteteItem, fetchItems } from "../../http/deviceAPI";
 
-const DeleteBrand = observer(({show, onHide}) => {
-    const {device} = useContext(Context)
+const DeleteBrand = observer(({ show, onHide }) => {
+  const { device } = useContext(Context);
 
-    const [deleteOportunity, setDeleteOportunity] = useState(true)
-    
-    useEffect(()=> {
-        fetchItems('api/brand').then(data => device.setBrands(data))
-    }, [device])
+  const [deleteOportunity, setDeleteOportunity] = useState(true);
 
-    const deleteBrand = () => {
-        const id = device.selectedBrand.id
-        deleteteItem(`api/brand/${id}`).then(() => {
-            device.setSelectedBrand({})
-            onHide()
-        })
-    }
+  useEffect(() => {
+    fetchItems("api/brand").then((data) => device.setBrands(data));
+  }, [device]);
 
-    const closeWindow = () => {
-        device.setSelectedBrand({})
-        onHide()
-    }
+  const deleteBrand = () => {
+    const id = device.selectedBrand.id;
+    deleteteItem(`api/brand/${id}`).then(() => {
+      device.setSelectedBrand({});
+      onHide();
+    });
+  };
 
-    return (
-    <Modal
-        show={show}
-        onHide={onHide}
-        size="lg"
-        centered
-    >
-        <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
-                Удалить бренд
-            </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <Form>
-                <Dropdown className="mt-2 mb-2">
-                    <Dropdown.Toggle>
-                      {device.selectedBrand.name || 'Выберите тип'}  
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        {device.brands.map(brand => 
-                            <Dropdown.Item 
-                                onClick={()=>{
-                                    device.setSelectedBrand(brand)
-                                    setDeleteOportunity(false)
-                                }} 
-                                key={brand.id}>
+  const closeWindow = () => {
+    device.setSelectedBrand({});
+    onHide();
+  };
 
-                                    {brand.name}
-
-                            </Dropdown.Item>
-                            )}
-                    </Dropdown.Menu>
-                </Dropdown>
-            </Form>
-        </Modal.Body>
-        <Modal.Footer>
-            <Button variant='outline-danger' onClick={closeWindow}>Закрыть</Button>
-            <Button variant='outline-success' disabled={deleteOportunity ? true : false} onClick={deleteBrand}>Удалить бренд</Button>
-        </Modal.Footer>
-    </Modal>        
-    )
-})
+  return (
+    <Modal show={show} onHide={onHide} size="lg" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Удалить бренд
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Dropdown className="mt-2 mb-2">
+            <Dropdown.Toggle>
+              {device.selectedBrand.name || "Выберите тип"}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {device.brands.map((brand) => (
+                <Dropdown.Item
+                  onClick={() => {
+                    device.setSelectedBrand(brand);
+                    setDeleteOportunity(false);
+                  }}
+                  key={brand.id}
+                >
+                  {brand.name}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="outline-danger" onClick={closeWindow}>
+          Закрыть
+        </Button>
+        <Button
+          variant="outline-success"
+          disabled={deleteOportunity ? true : false}
+          onClick={deleteBrand}
+        >
+          Удалить бренд
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+});
 
 export default DeleteBrand;

@@ -1,17 +1,16 @@
-import {makeAutoObservable} from "mobx"
+import { makeAutoObservable } from "mobx";
 
 export default class AdminStore {
-    constructor () {
-        this._numberOfList = 0
-        makeAutoObservable(this)
-    }
+  constructor() {
+    this._numberOfList = 0;
+    makeAutoObservable(this);
+  }
 
-    setNumberOfList(num){
-        this._numberOfList = num
-    }
+  setNumberOfList(num) {
+    this._numberOfList = num;
+  }
 
-    get numberOfList(){
-        return this._numberOfList
-    }
-
+  get numberOfList() {
+    return this._numberOfList;
+  }
 }

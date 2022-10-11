@@ -2,41 +2,40 @@ import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { createItem } from "../../http/deviceAPI";
 
-const CreateType = ({show, onHide}) => {
-    const [value, setValue] = useState('')
-    const addType = () => {
-        createItem('api/type', {name: value}).then(data => {
-            setValue('')
-            onHide()
-        })
-    }
-    return (
-    <Modal
-        show={show}
-        onHide={onHide}
-        size="lg"
-        centered
-    >
-        <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
-                Добавить новый тип
-            </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <Form>
-                <Form.Control
-                    value={value}
-                    onChange={e => setValue(e.target.value)}
-                    placeholder={'Введите название типа'}
-                />
-            </Form>
-        </Modal.Body>
-        <Modal.Footer>
-            <Button variant='outline-danger' onClick={onHide}>Закрыть</Button>
-            <Button variant='outline-success' onClick={addType}>Добавить новый тип</Button>
-        </Modal.Footer>
-    </Modal>        
-    )
-}
+const CreateType = ({ show, onHide }) => {
+  const [value, setValue] = useState("");
+  const addType = () => {
+    createItem("api/type", { name: value }).then((data) => {
+      setValue("");
+      onHide();
+    });
+  };
+  return (
+    <Modal show={show} onHide={onHide} size="lg" centered>
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Добавить новый тип
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Control
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={"Введите название типа"}
+          />
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="outline-danger" onClick={onHide}>
+          Закрыть
+        </Button>
+        <Button variant="outline-success" onClick={addType}>
+          Добавить новый тип
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
 
 export default CreateType;
