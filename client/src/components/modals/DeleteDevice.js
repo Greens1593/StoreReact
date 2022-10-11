@@ -1,19 +1,17 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { Button, Form, Modal, Row, InputGroup } from "react-bootstrap";
-import { fetchItems } from "../../http/deviceAPI";
+import { deleteteItem, fetchItems } from "../../http/deviceAPI";
 import DeviceLauncher from "../DeviceLauncher";
 
 const DeleteDevice = observer(({show, onHide}) => {
+
 
     const [name, setName] = useState('')
     const [devices, setDevices] = useState([])
     const [foundedDevice, setFoundedDevice] = useState([])
     const [deviceForDelete, setDeviceForDelete] = useState([])
-
-    const chooseDeviceForDelete = (devices) => {
-        setDeviceForDelete(devices)   
-    }    
+    const [deleteOportunity, setDeleteOportunity] = useState(true)
 
     useEffect(()=> {
         fetchItems('api/device').then(data => {
@@ -26,7 +24,24 @@ const DeleteDevice = observer(({show, onHide}) => {
         setFoundedDevice(founded)
     }
 
-    
+    const chooseDeviceForDelete = (event) => {
+        if(!event.target.id){
+            return
+        }
+        const id = +event.target.id
+        const indexIdInArray = deviceForDelete.indexOf(id)
+        if ( indexIdInArray === -1){
+            deviceForDelete.push(id)
+        }else{
+            deviceForDelete.splice(indexIdInArray, 1)
+        }
+        setDeviceForDelete(deviceForDelete)
+        if(deviceForDelete.length !== 0){
+            setDeleteOportunity(false)
+        }else{
+            setDeleteOportunity(true)
+        }
+    }  
 
     const closeWindow = () => {
         setName('')
@@ -34,7 +49,11 @@ const DeleteDevice = observer(({show, onHide}) => {
     }
 
     const deleteDevice = () => {
-        console.log(deviceForDelete)
+        deviceForDelete.forEach(id => {
+            deleteteItem(`api/device/${id}`).then(() => {
+            console.log('Device was deleted')
+            }).catch(e => console.log(e))
+        })
         onHide()
     }
 
@@ -72,6 +91,7 @@ const DeleteDevice = observer(({show, onHide}) => {
                                     key={device.id} 
                                     foundDevice={device}
                                     onClick={chooseDeviceForDelete}
+                                    id={device.id}
                                     />
                                 )}
                     </Row>
@@ -81,7 +101,7 @@ const DeleteDevice = observer(({show, onHide}) => {
             <Button 
                 variant='outline-success' 
                 onClick={deleteDevice}
-                disabled={deviceForDelete ? true : false}
+                disabled={deleteOportunity ? true : false}
                 >
                     Удалить устройство
             </Button>  

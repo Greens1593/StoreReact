@@ -13,7 +13,6 @@ const DeleteBrand = observer(({show, onHide}) => {
 
     const deleteBrand = () => {
         const id = device.selectedBrand.id
-        console.log(id)
         deleteteItem(`api/brand/${id}`).then(() => {
             device.setSelectedBrand({})
             onHide()
