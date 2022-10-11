@@ -1,11 +1,13 @@
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import { Context } from "../..";
 import { deleteteItem, fetchItems } from "../../http/deviceAPI";
 
 const DeleteBrand = observer(({show, onHide}) => {
     const {device} = useContext(Context)
+
+    const [deleteOportunity, setDeleteOportunity] = useState(true)
     
     useEffect(()=> {
         fetchItems('api/brand').then(data => device.setBrands(data))
@@ -45,7 +47,10 @@ const DeleteBrand = observer(({show, onHide}) => {
                     <Dropdown.Menu>
                         {device.brands.map(brand => 
                             <Dropdown.Item 
-                                onClick={()=>device.setSelectedBrand(brand)} 
+                                onClick={()=>{
+                                    device.setSelectedBrand(brand)
+                                    setDeleteOportunity(false)
+                                }} 
                                 key={brand.id}>
 
                                     {brand.name}
@@ -58,7 +63,7 @@ const DeleteBrand = observer(({show, onHide}) => {
         </Modal.Body>
         <Modal.Footer>
             <Button variant='outline-danger' onClick={closeWindow}>Закрыть</Button>
-            <Button variant='outline-success' onClick={deleteBrand}>Удалить бренд</Button>
+            <Button variant='outline-success' disabled={deleteOportunity ? true : false} onClick={deleteBrand}>Удалить бренд</Button>
         </Modal.Footer>
     </Modal>        
     )

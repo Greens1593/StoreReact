@@ -1,11 +1,13 @@
 import { observer } from "mobx-react-lite";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import { Context } from "../..";
 import { deleteteItem, fetchItems } from "../../http/deviceAPI";
 
 const DeleteType = observer(({show, onHide}) => {
     const {device} = useContext(Context)
+
+    const [deleteOportunity, setDeleteOportunity] = useState(true)
     
     useEffect(()=> {
         fetchItems('api/type').then(data => device.setTypes(data))
@@ -45,7 +47,10 @@ const DeleteType = observer(({show, onHide}) => {
                     <Dropdown.Menu>
                         {device.types.map(type => 
                             <Dropdown.Item 
-                                onClick={()=>device.setSelectedType(type)} 
+                                onClick={()=>{
+                                    device.setSelectedType(type)
+                                    setDeleteOportunity(false)
+                                }} 
                                 key={type.id}>
 
                                     {type.name}
@@ -58,7 +63,7 @@ const DeleteType = observer(({show, onHide}) => {
         </Modal.Body>
         <Modal.Footer>
             <Button variant='outline-danger' onClick={closeWindow}>Закрыть</Button>
-            <Button variant='outline-success' onClick={deleteType}>Удалить тип</Button>
+            <Button variant='outline-success' disabled={deleteOportunity ? true : false} onClick={deleteType}>Удалить тип</Button>
         </Modal.Footer>
     </Modal>        
     )
