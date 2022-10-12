@@ -4,32 +4,32 @@ import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import { Context } from "../..";
 import { changeItem, fetchItems } from "../../http/deviceAPI";
 
-const ChangeType = observer(({ show, onHide }) => {
+const ChangeBrand = observer(({ show, onHide }) => {
   const { device } = useContext(Context);
 
   const [value, setValue] = useState("");
   const [deleteOportunity, setDeleteOportunity] = useState(true);
   const [chooseOrChange, setChooseOrChange] = useState(true);
-  const [typeForChange, setTypeForChange] = useState({});
+  const [brandForChange, setBrandForChange] = useState({});
 
   useEffect(() => {
-    fetchItems("api/type").then((data) => device.setTypes(data));
-    device.setSelectedType({});
+    fetchItems("api/brand").then((data) => device.setBrands(data));
+    device.setSelectedBrand({});
   }, [device]);
 
-  const changeType = () => {
-    changeItem(`api/type/`, typeForChange)
+  const changeBrand = () => {
+    changeItem(`api/brand/`, brandForChange)
       .then(() => {
-        setTypeForChange({});
-        device.setSelectedType({});
+        setBrandForChange({});
         onHide();
+        device.setSelectedBrand({});
       })
       .catch((e) => console.log(e));
   };
 
   const closeWindow = () => {
-    device.setSelectedType({});
-    setTypeForChange({});
+    device.setSelectedBrand({});
+    setBrandForChange({});
     setChooseOrChange(true);
     onHide();
   };
@@ -38,7 +38,7 @@ const ChangeType = observer(({ show, onHide }) => {
     <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Изменить название типа
+          Изменить название бренда
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -46,21 +46,21 @@ const ChangeType = observer(({ show, onHide }) => {
           {chooseOrChange ? (
             <Dropdown className="mt-2 mb-2">
               <Dropdown.Toggle>
-                {device.selectedType.name || "Выберите тип"}
+                {device.selectedBrand.name || "Выберите бренд"}
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                {device.types.map((type) => (
+                {device.brands.map((brand) => (
                   <Dropdown.Item
                     onClick={() => {
-                      device.setSelectedType(type);
+                      device.setSelectedBrand(brand);
                       setDeleteOportunity(false);
                       setChooseOrChange(false);
-                      setValue(type.name);
-                      setTypeForChange(type);
+                      setValue(brand.name);
+                      setBrandForChange(brand);
                     }}
-                    key={type.id}
+                    key={brand.id}
                   >
-                    {type.name}
+                    {brand.name}
                   </Dropdown.Item>
                 ))}
               </Dropdown.Menu>
@@ -70,9 +70,9 @@ const ChangeType = observer(({ show, onHide }) => {
               value={value}
               onChange={(e) => {
                 setValue(e.target.value);
-                setTypeForChange({ ...typeForChange, name: e.target.value });
+                setBrandForChange({ ...brandForChange, name: e.target.value });
               }}
-              placeholder={"Введите название типа"}
+              placeholder={"Введите название бренда"}
             />
           )}
         </Form>
@@ -84,13 +84,13 @@ const ChangeType = observer(({ show, onHide }) => {
         <Button
           variant="outline-success"
           disabled={deleteOportunity ? true : false}
-          onClick={changeType}
+          onClick={changeBrand}
         >
-          Изменить тип
+          Изменить бренд
         </Button>
       </Modal.Footer>
     </Modal>
   );
 });
 
-export default ChangeType;
+export default ChangeBrand;

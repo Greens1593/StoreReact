@@ -12,6 +12,14 @@ class BrandControler {
     }
   }
 
+  async change(req, res) {
+    const { name, id } = req.body;
+    const brand = await Brand.findOne({ where: { id: id } });
+    brand.name = name;
+    await brand.save();
+    return res.json(brand);
+  }
+
   async getAll(req, res) {
     const brands = await Brand.findAll();
     return res.json(brands);

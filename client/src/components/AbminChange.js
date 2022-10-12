@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Container } from "react-bootstrap";
+import ChangeBrand from "./modals/ChangeBrand";
 import ChangeType from "./modals/ChangeType";
-import DeleteBrand from "./modals/DeleteBrand";
 import DeleteDevice from "./modals/DeleteDevice";
 
 const AdminChangeItems = () => {
@@ -37,7 +37,7 @@ const AdminChangeItems = () => {
         show={deviceVisible}
         onHide={() => setDeviceVisible(false)}
       />
-      <DeleteBrand show={brandVisible} onHide={() => setBrandVisible(false)} />
+      <ChangeBrand show={brandVisible} onHide={() => setBrandVisible(false)} />
       <ChangeType show={typeVisible} onHide={() => setTypeVisible(false)} />
     </Container>
   );
