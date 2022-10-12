@@ -8,6 +8,14 @@ class TypeControler {
     return res.json(type);
   }
 
+  async change(req, res) {
+    const { name, id } = req.body;
+    const type = await Type.findOne({ where: { id: id } });
+    type.name = name;
+    await type.save();
+    return res.json(type);
+  }
+
   async getAll(req, res) {
     const types = await Type.findAll();
     return res.json(types);

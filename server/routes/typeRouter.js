@@ -7,5 +7,6 @@ const router = new Router();
 router.post("/", checkRoleMiddleware("ADMIN"), typeController.create);
 router.delete("/:id", checkRoleMiddleware("ADMIN"), typeController.delete);
 router.get("/", typeController.getAll);
+router.put("/", checkRoleMiddleware("ADMIN"), typeController.change);
 
 module.exports = router;

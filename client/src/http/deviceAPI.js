@@ -5,6 +5,11 @@ export async function createItem(api, item) {
   return data;
 }
 
+export async function changeItem(api, item) {
+  const { data } = await $authHost.put(api, item);
+  return data;
+}
+
 export async function deleteteItem(api) {
   const { data } = await $authHost.delete(api);
   return data;
