@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import ChangeBrand from "./modals/ChangeBrand";
+import ChangeDevice from "./modals/ChangeDevice";
 import ChangeType from "./modals/ChangeType";
-import DeleteDevice from "./modals/DeleteDevice";
 
 const AdminChangeItems = () => {
   const [brandVisible, setBrandVisible] = useState(false);
@@ -33,7 +33,7 @@ const AdminChangeItems = () => {
         Изменить информацию об устройстве
       </Button>
 
-      <DeleteDevice
+      <ChangeDevice
         show={deviceVisible}
         onHide={() => setDeviceVisible(false)}
       />

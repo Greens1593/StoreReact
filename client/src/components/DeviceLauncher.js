@@ -24,7 +24,7 @@ const DeviceLauncher = observer(({ foundDevice, onClick, id }) => {
     <div
       className="deviceLauncher d-flex flex-nowrap justify-content-between"
       style={{
-        width: 480,
+        width: "99%",
         marginLeft: 3,
         border: "3px white solid",
         cursor: "pointer",

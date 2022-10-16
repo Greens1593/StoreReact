@@ -8,7 +8,7 @@ const ChangeType = observer(({ show, onHide }) => {
   const { device } = useContext(Context);
 
   const [value, setValue] = useState("");
-  const [deleteOportunity, setDeleteOportunity] = useState(true);
+  const [changeOportunity, setChangeOportunity] = useState(true);
   const [chooseOrChange, setChooseOrChange] = useState(true);
   const [typeForChange, setTypeForChange] = useState({});
 
@@ -53,7 +53,7 @@ const ChangeType = observer(({ show, onHide }) => {
                   <Dropdown.Item
                     onClick={() => {
                       device.setSelectedType(type);
-                      setDeleteOportunity(false);
+                      setChangeOportunity(false);
                       setChooseOrChange(false);
                       setValue(type.name);
                       setTypeForChange(type);
@@ -83,7 +83,7 @@ const ChangeType = observer(({ show, onHide }) => {
         </Button>
         <Button
           variant="outline-success"
-          disabled={deleteOportunity ? true : false}
+          disabled={changeOportunity}
           onClick={changeType}
         >
           Изменить тип

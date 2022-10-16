@@ -8,7 +8,7 @@ const ChangeBrand = observer(({ show, onHide }) => {
   const { device } = useContext(Context);
 
   const [value, setValue] = useState("");
-  const [deleteOportunity, setDeleteOportunity] = useState(true);
+  const [changeOportunity, setChangeOportunity] = useState(true);
   const [chooseOrChange, setChooseOrChange] = useState(true);
   const [brandForChange, setBrandForChange] = useState({});
 
@@ -53,7 +53,7 @@ const ChangeBrand = observer(({ show, onHide }) => {
                   <Dropdown.Item
                     onClick={() => {
                       device.setSelectedBrand(brand);
-                      setDeleteOportunity(false);
+                      setChangeOportunity(false);
                       setChooseOrChange(false);
                       setValue(brand.name);
                       setBrandForChange(brand);
@@ -83,7 +83,7 @@ const ChangeBrand = observer(({ show, onHide }) => {
         </Button>
         <Button
           variant="outline-success"
-          disabled={deleteOportunity ? true : false}
+          disabled={changeOportunity}
           onClick={changeBrand}
         >
           Изменить бренд
