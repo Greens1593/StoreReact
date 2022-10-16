@@ -11,7 +11,7 @@ import {
   Image,
 } from "react-bootstrap";
 import { Context } from "../..";
-import { fetchItems, fetchOneItem } from "../../http/deviceAPI";
+import { changeItem, fetchItems, fetchOneItem } from "../../http/deviceAPI";
 import DeviceLauncher from "../DeviceLauncher";
 
 const ChangeDevice = observer(({ show, onHide }) => {
@@ -94,7 +94,7 @@ const ChangeDevice = observer(({ show, onHide }) => {
     onHide();
   };
 
-  const addDevice = () => {
+  const changeDevice = () => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("price", `${price}`);
@@ -102,10 +102,11 @@ const ChangeDevice = observer(({ show, onHide }) => {
     formData.append("brandId", device.selectedBrand.id);
     formData.append("typeId", device.selectedType.id);
     formData.append("info", JSON.stringify(info));
+    formData.append("id", deviceForChange.id);
     console.log(formData);
-    // // createItem("api/device", formData)
-    //   .then(() => onHide())
-    //   .catch((e) => console.log(e.message));
+    changeItem("api/device", formData)
+      .then(() => onHide())
+      .catch((e) => console.log(e.message));
   };
 
   return (
@@ -266,7 +267,7 @@ const ChangeDevice = observer(({ show, onHide }) => {
         </Button>
         <Button
           variant="outline-success"
-          onClick={addDevice}
+          onClick={changeDevice}
           disabled={changeOportunity}
         >
           Изменить информацию об устройстве
