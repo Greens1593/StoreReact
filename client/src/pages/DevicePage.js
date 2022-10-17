@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Image, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Image,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 import bigStar from "../assets/bigStar.png";
 import { useParams } from "react-router-dom";
 import { fetchOneItem } from "../http/deviceAPI";
@@ -10,7 +18,9 @@ const DevicePage = () => {
   useEffect(() => {
     fetchOneItem("api/device/", id).then((data) => setDevice(data));
   }, [id]);
-  return (
+  return !device.img ? (
+    <Spinner animation="border" />
+  ) : (
     <Container>
       <Row
         style={{
@@ -23,6 +33,7 @@ const DevicePage = () => {
             width={300}
             height={320}
             src={process.env.REACT_APP_API_URL + device.img}
+            alt={device.name}
           />
         </Col>
         <Col md={4}>

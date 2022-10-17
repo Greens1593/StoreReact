@@ -103,7 +103,6 @@ const ChangeDevice = observer(({ show, onHide }) => {
     formData.append("typeId", device.selectedType.id);
     formData.append("info", JSON.stringify(info));
     formData.append("id", deviceForChange.id);
-    console.log(formData);
     changeItem("api/device", formData)
       .then(() => onHide())
       .catch((e) => console.log(e.message));

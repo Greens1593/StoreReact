@@ -92,16 +92,15 @@ class DeviceControler {
     await DeviceInfo.destroy({
       where: { deviceId: id },
     });
-    await fs.unlink(
-      path.resolve(__dirname, "..", "static", device.img),
-      (err) => {
+    fs.unlink(path.resolve(__dirname, "..", "static", device.img), (err) => {
+      if (err) {
         return next(ApiError.badReqest(err));
       }
-    );
+    });
     res.status(200).json({ id });
   }
 
-  async change(req, res) {
+  async change(req, res, next) {
     const { id, name, price, brandId, typeId, info } = req.body;
     console.log(id, name, price, brandId, typeId, info);
     const device = await Device.findOne({ where: { id: id } });
@@ -112,7 +111,11 @@ class DeviceControler {
 
     if (req.files !== null) {
       const { img } = req.files;
-      await fs.unlink(path.resolve(__dirname, "..", "static", device.img));
+      fs.unlink(path.resolve(__dirname, "..", "static", device.img), (err) => {
+        if (err) {
+          return next(ApiError.badReqest(err));
+        }
+      });
       let fileName = uuid.v4() + ".jpg";
       img.mv(path.resolve(__dirname, "..", "static", fileName));
       device.img = fileName;
@@ -123,15 +126,15 @@ class DeviceControler {
     if (info) {
       await DeviceInfo.destroy({ where: { deviceId: id } });
       const newInfo = JSON.parse(info);
-      newInfo.forEach((i) => {
-        DeviceInfo.create({
+      newInfo.forEach(async (i) => {
+        await DeviceInfo.create({
           title: i.title,
           description: i.description,
           deviceId: id,
         });
       });
     }
-    return res.json(device);
+    return res.status(200).json(device);
   }
 }
 
