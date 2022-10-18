@@ -102,7 +102,6 @@ class DeviceControler {
 
   async change(req, res, next) {
     const { id, name, price, brandId, typeId, info } = req.body;
-    console.log(id, name, price, brandId, typeId, info);
     const device = await Device.findOne({ where: { id: id } });
     device.name = name;
     device.price = price;
@@ -136,6 +135,19 @@ class DeviceControler {
     }
     return res.status(200).json(device);
   }
+
+  estimate = async (req, res) => {
+    const { deviceId, userId, rate } = req.body;
+    const desiredDevice = await Device.findOne({ where: { deviceId } });
+    if (desiredDevice.userId !== userId) {
+      const newRate =
+        (desiredDevice.rate * desiredDevice.count + rate) /
+        (desiredDevice.count + 1);
+      desiredDevice.rate = newRate;
+      desiredDevice.count = desiredDevice.count + 1;
+      res.json(newRate);
+    } else res.json({ message: "Вы уже поставили оценку этому устройству" });
+  };
 }
 
 module.exports = new DeviceControler();

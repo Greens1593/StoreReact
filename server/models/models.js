@@ -97,6 +97,11 @@ const Rating = sequelize.define("rating", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  count: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
 });
 
 const DeviceInfo = sequelize.define("deviceInfo", {
