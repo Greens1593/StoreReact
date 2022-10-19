@@ -2,7 +2,8 @@ const uuid = require("uuid");
 const path = require("path");
 const fs = require("fs");
 
-const { Device, DeviceInfo } = require("../models/models");
+const jwt = require("jsonwebtoken");
+const { Device, DeviceInfo, Rating } = require("../models/models");
 const ApiError = require("../error/apiError");
 
 class DeviceControler {
@@ -137,16 +138,41 @@ class DeviceControler {
   }
 
   estimate = async (req, res) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const user = jwt.verify(token, process.env.SECRET_KEY);
+
+    console.log(user.id);
+
     const { deviceId, userId, rate } = req.body;
-    const desiredDevice = await Device.findOne({ where: { deviceId } });
-    if (desiredDevice.userId !== userId) {
-      const newRate =
-        (desiredDevice.rate * desiredDevice.count + rate) /
-        (desiredDevice.count + 1);
+
+    const desiredDevice = await Rating.findOne({ where: { deviceId } });
+    const device = await Device.findOne({ where: { id: deviceId } });
+    if (!desiredDevice) {
+      console.log("Первая оценка");
+      const rating = await Rating.create({
+        rate,
+        deviceId,
+        userId: user.id,
+      });
+      device.rating = rate;
+      device.save();
+      return res.json(rating);
+    }
+    if (+desiredDevice.userId !== user.id) {
+      console.log("Первая оценка когда девайс уже оценен");
+      const newRate = Math.round(
+        (+device.rating * +desiredDevice.count + rate) / ++desiredDevice.count
+      );
       desiredDevice.rate = newRate;
-      desiredDevice.count = desiredDevice.count + 1;
-      res.json(newRate);
-    } else res.json({ message: "Вы уже поставили оценку этому устройству" });
+      desiredDevice.count = ++desiredDevice.count;
+      device.rating = newRate;
+      device.save();
+      desiredDevice.save();
+      return res.json(newRate);
+    } else {
+      console.log("Девайс не оценен");
+      return res.json({ message: "Вы уже поставили оценку этому устройству" });
+    }
   };
 }
 

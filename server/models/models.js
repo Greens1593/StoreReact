@@ -159,6 +159,7 @@ module.exports = {
   User,
   Basket,
   BasketDevice,
+  Rating,
   Device,
   Type,
   Brand,
