@@ -18,6 +18,11 @@ const User = sequelize.define("user", {
     type: DataTypes.STRING,
     defaultValue: "USER",
   },
+  ratedDevices: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
+    defaultValue: [],
+    allowNull: false,
+  },
 });
 
 const Basket = sequelize.define("basket", {

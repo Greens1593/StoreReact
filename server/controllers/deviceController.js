@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 const jwt = require("jsonwebtoken");
-const { Device, DeviceInfo, Rating } = require("../models/models");
+const { Device, DeviceInfo, Rating, User } = require("../models/models");
 const ApiError = require("../error/apiError");
 
 class DeviceControler {
@@ -139,35 +139,39 @@ class DeviceControler {
 
   estimate = async (req, res) => {
     const token = req.headers.authorization.split(" ")[1];
-    const user = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = jwt.verify(token, process.env.SECRET_KEY).id;
+    const user = await User.findByPk(userId);
 
-    console.log(user.id);
-
-    const { deviceId, userId, rate } = req.body;
+    const { deviceId, rate } = req.body;
 
     const desiredDevice = await Rating.findOne({ where: { deviceId } });
     const device = await Device.findOne({ where: { id: deviceId } });
     if (!desiredDevice) {
       console.log("Первая оценка");
-      const rating = await Rating.create({
+      await Rating.create({
         rate,
         deviceId,
-        userId: user.id,
+        count: 1,
       });
+      user.ratedDevices = [deviceId];
       device.rating = rate;
-      device.save();
-      return res.json(rating);
+      await user.save();
+      await device.save();
+      return res.json(device.rating);
     }
-    if (+desiredDevice.userId !== user.id) {
+    if (user.ratedDevices.indexOf(+deviceId) === -1) {
       console.log("Первая оценка когда девайс уже оценен");
-      const newRate = Math.round(
-        (+device.rating * +desiredDevice.count + rate) / ++desiredDevice.count
-      );
+      const newRatedDevice = user.ratedDevices;
+      const newRate = +desiredDevice.rate + rate;
       desiredDevice.rate = newRate;
       desiredDevice.count = ++desiredDevice.count;
-      device.rating = newRate;
-      device.save();
-      desiredDevice.save();
+      device.rating = newRate / desiredDevice.count;
+      const test = newRatedDevice.push(device.id);
+      user.ratedDevices = newRatedDevice;
+      console.log(newRatedDevice, test);
+      await user.save();
+      await device.save();
+      await desiredDevice.save();
       return res.json(newRate);
     } else {
       console.log("Девайс не оценен");

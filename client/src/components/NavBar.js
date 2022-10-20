@@ -11,10 +11,14 @@ import {
   SHOP_ROUTE,
 } from "../utils/consts";
 import { observer } from "mobx-react-lite";
+import jwtDecode from "jwt-decode";
 
 const NavBar = observer(() => {
   const { user } = useContext(Context);
   const history = useHistory();
+
+  const token = localStorage.getItem("token");
+  const role = token === "" ? null : jwtDecode(token).role;
 
   const logOut = () => {
     user.setUser({});
@@ -32,21 +36,33 @@ const NavBar = observer(() => {
           Store
         </NavLink>
         {user.isAuth ? (
-          <Nav style={{ color: "white" }} className="ml-auto">
-            <Button
-              variant={"outline-light"}
-              onClick={() => history.push(ADMIN_ROUTE)}
-            >
-              Админпанель
-            </Button>
-            <Button
-              variant={"outline-light"}
-              style={{ marginLeft: "10px" }}
-              onClick={() => logOut()}
-            >
-              Выйти
-            </Button>
-          </Nav>
+          role === "ADMIN" ? (
+            <Nav style={{ color: "white" }} className="ml-auto">
+              <Button
+                variant={"outline-light"}
+                onClick={() => history.push(ADMIN_ROUTE)}
+              >
+                Админпанель
+              </Button>
+              <Button
+                variant={"outline-light"}
+                style={{ marginLeft: "10px" }}
+                onClick={() => logOut()}
+              >
+                Выйти
+              </Button>
+            </Nav>
+          ) : (
+            <Nav style={{ color: "white" }} className="ml-auto">
+              <Button
+                variant={"outline-light"}
+                style={{ marginLeft: "10px" }}
+                onClick={() => logOut()}
+              >
+                Выйти
+              </Button>
+            </Nav>
+          )
         ) : (
           <Nav style={{ color: "white" }} className="ml-auto">
             <Button
