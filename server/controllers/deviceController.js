@@ -141,13 +141,11 @@ class DeviceControler {
     const token = req.headers.authorization.split(" ")[1];
     const userId = jwt.verify(token, process.env.SECRET_KEY).id;
     const user = await User.findByPk(userId);
-
     const { deviceId, rate } = req.body;
 
     const desiredDevice = await Rating.findOne({ where: { deviceId } });
     const device = await Device.findOne({ where: { id: deviceId } });
     if (!desiredDevice) {
-      console.log("Первая оценка");
       await Rating.create({
         rate,
         deviceId,
@@ -159,22 +157,17 @@ class DeviceControler {
       await device.save();
       return res.json(device.rating);
     }
-    if (user.ratedDevices.indexOf(+deviceId) === -1) {
-      console.log("Первая оценка когда девайс уже оценен");
-      const newRatedDevice = user.ratedDevices;
-      const newRate = +desiredDevice.rate + rate;
+    if (user.ratedDevices.indexOf(device.id) === -1) {
+      const newRate = +rate + desiredDevice.rate;
       desiredDevice.rate = newRate;
       desiredDevice.count = ++desiredDevice.count;
-      device.rating = newRate / desiredDevice.count;
-      const test = newRatedDevice.push(device.id);
-      user.ratedDevices = newRatedDevice;
-      console.log(newRatedDevice, test);
+      device.rating = Math.round((newRate / desiredDevice.count) * 10) / 10;
+      user.ratedDevices = [...user.ratedDevices, device.id];
       await user.save();
       await device.save();
       await desiredDevice.save();
-      return res.json(newRate);
+      return res.json(device.rating);
     } else {
-      console.log("Девайс не оценен");
       return res.json({ message: "Вы уже поставили оценку этому устройству" });
     }
   };
