@@ -11,6 +11,7 @@ import {
 import bigStar from "../assets/bigStar.png";
 import { useParams } from "react-router-dom";
 import { fetchOneItem } from "../http/deviceAPI";
+import RatigLauncher from "../components/RatigLauncher";
 
 const DevicePage = () => {
   const [device, setDevice] = useState({ info: [] });
@@ -50,12 +51,14 @@ const DevicePage = () => {
                 background: `url(${bigStar}) no-repeat center center`,
                 width: 250,
                 height: 240,
-                backgroundSize: "cover",
-                fontSize: 64,
+                backgroundSize: "76%",
+                fontSize: 60,
+                fontWeight: 700,
               }}
             >
               {device.rating}
             </Row>
+            <RatigLauncher className="mt-2" />
           </Card>
         </Col>
         <Col md={4}>
