@@ -50,6 +50,15 @@ class UserControler {
     const token = generateJwt(req.user.id, req.user.email, req.user.role);
     return res.json({ token });
   }
+
+  async ratedDevices(req, res, next) {
+    if (req.user.id) {
+      const user = await User.findByPk(req.user.id);
+      return res.json(user.ratedDevices);
+    } else {
+      return res.json(false);
+    }
+  }
 }
 
 module.exports = new UserControler();

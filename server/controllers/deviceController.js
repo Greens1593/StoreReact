@@ -137,11 +137,12 @@ class DeviceControler {
     return res.status(200).json(device);
   }
 
-  estimate = async (req, res) => {
+  estimate = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
+    const deviceId = +req.params.id;
     const userId = jwt.verify(token, process.env.SECRET_KEY).id;
     const user = await User.findByPk(userId);
-    const { deviceId, rate } = req.body;
+    const { rate } = req.body;
 
     const desiredDevice = await Rating.findOne({ where: { deviceId } });
     const device = await Device.findOne({ where: { id: deviceId } });
@@ -168,7 +169,9 @@ class DeviceControler {
       await desiredDevice.save();
       return res.json(device.rating);
     } else {
-      return res.json({ message: "Вы уже поставили оценку этому устройству" });
+      return next(
+        ApiError.internal("Вы уже поставили оценку этому устройству")
+      );
     }
   };
 }

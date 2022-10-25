@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -10,15 +10,42 @@ import {
 } from "react-bootstrap";
 import bigStar from "../assets/bigStar.png";
 import { useParams } from "react-router-dom";
-import { fetchOneItem } from "../http/deviceAPI";
+import { estimate, fetchOneItem } from "../http/deviceAPI";
+import { getRatedDevice } from "../http/userAPI";
 import RatigLauncher from "../components/RatigLauncher";
+import { Context } from "..";
 
 const DevicePage = () => {
+  const { user } = useContext(Context);
   const [device, setDevice] = useState({ info: [] });
+  const [deviceRating, setDeviceRating] = useState(0);
+  const [abilityToEstimate, setAbilityToEstimate] = useState(false);
   const { id } = useParams();
+
   useEffect(() => {
-    fetchOneItem("api/device/", id).then((data) => setDevice(data));
-  }, [id]);
+    if (localStorage.getItem("token") !== "") {
+      getRatedDevice().then((data) => {
+        if (data.indexOf(id) === -1) {
+          setAbilityToEstimate(true);
+        }
+      });
+    }
+    fetchOneItem("api/device/", id).then((data) => {
+      setDevice(data);
+      setDeviceRating(device.rating);
+    });
+  }, [id, device.rating]);
+  const estimateDevice = (e) => {
+    if (e.target.id) {
+      const rate = e.target.id;
+      estimate(`api/device/${id}`, { rate })
+        .then((data) => {
+          setDeviceRating(data);
+          setAbilityToEstimate(false);
+        })
+        .catch((e) => alert(e.message));
+    }
+  };
   return !device.img ? (
     <Spinner animation="border" />
   ) : (
@@ -52,13 +79,27 @@ const DevicePage = () => {
                 width: 250,
                 height: 240,
                 backgroundSize: "76%",
-                fontSize: 60,
+                fontSize: 45,
                 fontWeight: 700,
               }}
             >
-              {device.rating}
+              {deviceRating}
             </Row>
-            <RatigLauncher className="mt-2" />
+            <div style={{ fontSize: 20, textAlign: "center", display: "flex" }}>
+              {!user.isAuth ? (
+                <Row className="mt-2">
+                  Устройства могут оценивать только авторизированые пользователи
+                </Row>
+              ) : (
+                <Row className="mt-2">
+                  {abilityToEstimate ? (
+                    <RatigLauncher onClick={estimateDevice} />
+                  ) : (
+                    <Row>Вы уже оценили это устройство</Row>
+                  )}
+                </Row>
+              )}
+            </div>
           </Card>
         </Col>
         <Col md={4}>

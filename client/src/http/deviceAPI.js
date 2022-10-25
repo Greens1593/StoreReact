@@ -5,7 +5,7 @@ export async function createItem(api, item) {
   return data;
 }
 
-export async function estimateDevice(api, item) {
+export async function estimate(api, item) {
   const { data } = await $authHost.post(api, item);
   return data;
 }
