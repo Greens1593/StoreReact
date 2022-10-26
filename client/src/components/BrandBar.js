@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
-import { Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { Context } from "../index.js";
 
 const BrandBar = observer(() => {
@@ -20,6 +20,9 @@ const BrandBar = observer(() => {
           </Card>
         );
       })}
+      <Button variant="danger" onClick={() => device.setSelectedBrand({})}>
+        Показать все бренды
+      </Button>
     </div>
   );
 });

@@ -24,6 +24,7 @@ const NavBar = observer(() => {
     user.setUser({});
     user.setIsAuth(false);
     localStorage.setItem("token", "");
+    history.push(SHOP_ROUTE);
   };
 
   return (

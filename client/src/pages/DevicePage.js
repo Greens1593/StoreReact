@@ -24,8 +24,11 @@ const DevicePage = () => {
 
   useEffect(() => {
     if (localStorage.getItem("token") !== "") {
+      console.log(abilityToEstimate);
       getRatedDevice().then((data) => {
-        if (data.indexOf(id) === -1) {
+        console.log(typeof data[0], typeof id);
+        console.log(data.indexOf(+id));
+        if (data.indexOf(+id) === -1) {
           setAbilityToEstimate(true);
         }
       });
